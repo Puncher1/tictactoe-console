@@ -1,5 +1,6 @@
 import os
 import random
+import time
 
 
 class TicTacToe:
@@ -159,9 +160,28 @@ class TicTacToe:
         """.format(*format_list)
         print(output)
 
+    def reset_game(self):
+        self.grid = [[" ", " ", " "],
+                    [" ", " ", " "],
+                    [" ", " ", " "]]
+
+        self.invalid_input = False
+        self.field_already_used = False
 
     def main_loop(self):
+        game_finished = False
         while True:
+            if game_finished:
+                game_finished = False
+
+                input_finished = input("Do you want to restart? (y/n): ")
+                if input_finished.lower() in ["yes", "y"]:
+                    self.reset_game()
+                    continue
+                else:
+                    print("Exit.")
+                    break
+
             self.generate_grid()
             field_str = self.generate_input()
 
@@ -180,13 +200,15 @@ class TicTacToe:
             if winner:
                 self.generate_grid()
                 print(f"{winner} wins!")
-                break
+                game_finished = True
+                continue
 
             possible_fields = self.get_possible_fields()
             if not possible_fields:
                 self.generate_grid()
                 print(f"It's a tie!")
-                break
+                game_finished = True
+                continue
 
             rand_coordinates = self.get_random_coordinates(possible_fields)
             self.set_bot_move(rand_coordinates)
@@ -195,7 +217,8 @@ class TicTacToe:
             if winner:
                 self.generate_grid()
                 print(f"{winner} wins!")
-                break
+                game_finished = True
+                continue
 
 
 
