@@ -142,7 +142,7 @@ class TicTacToe:
 
         return field_str
 
-    def generate_output(self):
+    def generate_grid(self):
         os.system("cls")
         format_list = []
         for row in self.grid:
@@ -162,7 +162,7 @@ class TicTacToe:
 
     def main_loop(self):
         while True:
-            self.generate_output()
+            self.generate_grid()
             field_str = self.generate_input()
 
             self.check_input(field_str)
@@ -178,13 +178,13 @@ class TicTacToe:
 
             winner = self.get_winner()
             if winner:
-                self.generate_output()
+                self.generate_grid()
                 print(f"{winner} wins!")
                 break
 
             possible_fields = self.get_possible_fields()
             if not possible_fields:
-                self.generate_output()
+                self.generate_grid()
                 print(f"It's a tie!")
                 break
 
@@ -193,7 +193,7 @@ class TicTacToe:
 
             winner = self.get_winner()
             if winner:
-                self.generate_output()
+                self.generate_grid()
                 print(f"{winner} wins!")
                 break
 
