@@ -1,4 +1,5 @@
 import os
+import sys
 import random
 import time
 
@@ -156,7 +157,10 @@ class TicTacToe:
                     self.reset_game()
                     continue
                 else:
-                    print("Exit.")
+                    for _ in range(2):
+                        sys.stdout.write("\x1b[1A")
+                        sys.stdout.write("\x1b[2K")
+                    print(f"\rExit.")
                     break
 
             self.generate_grid()
@@ -176,7 +180,7 @@ class TicTacToe:
             is_player_win = self.check_winner("O")
             if is_player_win:
                 self.generate_grid()
-                print(f"O wins!")
+                print(f"You win! :D")
                 game_finished = True
                 continue
 
@@ -193,7 +197,7 @@ class TicTacToe:
             is_bot_win = self.check_winner("X")
             if is_bot_win:
                 self.generate_grid()
-                print(f"X wins!")
+                print(f"You lose! :(")
                 game_finished = True
                 continue
 
@@ -202,4 +206,8 @@ class TicTacToe:
 tic_tac_toe = TicTacToe()
 
 if __name__ == "__main__":
-    tic_tac_toe.main_loop()
+    try:
+        tic_tac_toe.main_loop()
+    except KeyboardInterrupt:
+        sys.stdout.write("\x1b[2K")
+        print("\rExit.")
