@@ -53,76 +53,53 @@ class TicTacToe:
         if field != " ":
             self.field_already_used = True
 
-    def get_winner(self):
+    def check_winner(self, player):
 
         # horizontal check
         for i in range(3):
-            O_count_h = 0
-            X_count_h = 0
+            count_h = 0
             for j in range(3):
                 field = self.grid[i][j]
-                if field == "O":
-                    O_count_h += 1
+                if field == player:
+                    count_h += 1
 
-                if field == "X":
-                    X_count_h += 1
-
-            if O_count_h == 3:
-                return "O"
-            elif X_count_h == 3:
-                return "X"
+            if count_h == 3:
+                return True
 
         # vertical check
         for i in range(3):
-            O_count_v = 0
-            X_count_v = 0
+            count_v = 0
             for j in range(3):
                 field = self.grid[j][i]
-                if field == "O":
-                    O_count_v += 1
+                if field == player:
+                    count_v += 1
 
-                if field == "X":
-                    X_count_v += 1
-
-            if O_count_v == 3:
-                return "O"
-            elif X_count_v == 3:
-                return "X"
+            if count_v == 3:
+                return True
 
         # diagonal check
-        O_count_d = 0
-        X_count_d = 0
+        count_d = 0
         for i in range(3):
             field = self.grid[i][i]
-            if field == "O":
-                O_count_d += 1
+            if field == player:
+                count_d += 1
 
-            if field == "X":
-                X_count_d += 1
-
-        if O_count_d == 3:
-            return "O"
-        elif X_count_d == 3:
-            return "X"
+        if count_d == 3:
+            return True
 
         d = 2
-        O_count_d = 0
-        X_count_d = 0
+        count_d = 0
         for i in range(3):
             field = self.grid[d][i]
-            if field == "O":
-                O_count_d += 1
-
-            if field == "X":
-                X_count_d += 1
+            if field == player:
+                count_d += 1
 
             d -= 1
 
-        if O_count_d == 3:
-            return "O"
-        elif X_count_d == 3:
-            return "X"
+        if count_d == 3:
+            return True
 
+        return False
 
     def set_player_move(self, coordinates):
         self.grid[coordinates[0]][coordinates[1]] = "O"
@@ -196,10 +173,10 @@ class TicTacToe:
 
             self.set_player_move(coordinates)
 
-            winner = self.get_winner()
-            if winner:
+            is_player_win = self.check_winner("O")
+            if is_player_win:
                 self.generate_grid()
-                print(f"{winner} wins!")
+                print(f"O wins!")
                 game_finished = True
                 continue
 
@@ -213,10 +190,10 @@ class TicTacToe:
             rand_coordinates = self.get_random_coordinates(possible_fields)
             self.set_bot_move(rand_coordinates)
 
-            winner = self.get_winner()
-            if winner:
+            is_bot_win = self.check_winner("X")
+            if is_bot_win:
                 self.generate_grid()
-                print(f"{winner} wins!")
+                print(f"X wins!")
                 game_finished = True
                 continue
 
