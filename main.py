@@ -171,7 +171,7 @@ class TicTacToe:
 
         if self.invalid_input:
             self.invalid_input = False
-            field_str = input("Invalid input. Make sure it's in format e.g. 'A1' and try again: ")
+            field_str = input("Invalid field. Make sure it's in format e.g. 'A1' and try again: ")
         elif self.field_already_used:
             self.field_already_used = False
             field_str = input("Field already used, try again: ")
@@ -207,9 +207,12 @@ class TicTacToe:
 
     def main_loop(self):
         game_finished = False
+        first_run = True
+
         while True:
             if game_finished:
                 game_finished = False
+                first_run = True
 
                 input_finished = input("Do you want to restart? (y/n): ")
                 if input_finished.lower() in ["yes", "y"]:
@@ -223,6 +226,23 @@ class TicTacToe:
                     break
 
             self.generate_grid()
+
+            if first_run:
+                first_run = False
+
+                difficulty_str = input("Choose difficulty (0: easy, 1: medium, 2: impossible): ")
+                while True:
+                    try:
+                        difficulty = int(difficulty_str)
+                    except ValueError:
+                        sys.stdout.write("\x1b[1A")
+                        sys.stdout.write("\x1b[2K")
+                        difficulty_str = input("Invalid difficulty. Please try again (0: easy, 1: medium, 2: impossible): ")
+                    else:
+                        sys.stdout.write("\x1b[1A")
+                        sys.stdout.write("\x1b[2K")
+                        break
+
             field_str = self.generate_input()
 
             self.check_input(field_str)
@@ -250,10 +270,24 @@ class TicTacToe:
                 game_finished = True
                 continue
 
+            if difficulty == 0:
+                bot_field = random.choice(possible_fields)
 
-            best_field = self.get_best_field()
-            self.set_bot_move((best_field[0], best_field[1]))
+            elif difficulty == 1:
+                choose_field_method = random.randint(0, 1)
 
+                if choose_field_method:
+                    bot_field = self.get_best_field()
+                else:
+                    bot_field = random.choice(possible_fields)
+
+            elif difficulty == 2:
+                bot_field = self.get_best_field()
+
+            else:
+                raise ValueError("Difficulty not found")
+
+            self.set_bot_move((bot_field[0], bot_field[1]))
             is_bot_win = self.check_winner("X", self.grid)
             if is_bot_win:
                 self.generate_grid()
