@@ -266,7 +266,7 @@ class TicTacToe:
             possible_fields = self.get_possible_fields(self.grid)
             if not possible_fields:
                 self.generate_grid()
-                print(f"It's a tie!")
+                print(f"Draw!")
                 game_finished = True
                 continue
 
