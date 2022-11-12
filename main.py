@@ -1,3 +1,4 @@
+from copy import deepcopy
 import os
 import sys
 import random
@@ -27,9 +28,9 @@ class TicTacToe:
 
         return coordinates
 
-    def get_possible_fields(self):
+    def get_possible_fields(self, grid):
         possible_fields = []
-        for i, row in enumerate(self.grid):
+        for i, row in enumerate(grid):
             for j, field in enumerate(row):
                 if field == " ":
                     possible_fields.append((i, j))
@@ -54,13 +55,13 @@ class TicTacToe:
         if field != " ":
             self.field_already_used = True
 
-    def check_winner(self, player):
+    def check_winner(self, player, grid):
 
         # horizontal check
         for i in range(3):
             count_h = 0
             for j in range(3):
-                field = self.grid[i][j]
+                field = grid[i][j]
                 if field == player:
                     count_h += 1
 
@@ -71,7 +72,7 @@ class TicTacToe:
         for i in range(3):
             count_v = 0
             for j in range(3):
-                field = self.grid[j][i]
+                field = grid[j][i]
                 if field == player:
                     count_v += 1
 
@@ -81,7 +82,7 @@ class TicTacToe:
         # diagonal check
         count_d = 0
         for i in range(3):
-            field = self.grid[i][i]
+            field = grid[i][i]
             if field == player:
                 count_d += 1
 
@@ -91,7 +92,7 @@ class TicTacToe:
         d = 2
         count_d = 0
         for i in range(3):
-            field = self.grid[d][i]
+            field = grid[d][i]
             if field == player:
                 count_d += 1
 
@@ -101,6 +102,64 @@ class TicTacToe:
             return True
 
         return False
+
+    def get_termination_state(self, grid):
+        if self.check_winner("X", grid):
+            return 10
+        elif self.check_winner("O", grid):
+            return -10
+
+    def minimax(self, temp_grid, is_maximizer):
+        possible_fields = self.get_possible_fields(temp_grid)
+        state = self.get_termination_state(temp_grid)
+
+        if state == 10:
+            return state
+        elif state == -10:
+            return state
+
+        if not possible_fields:
+            return 0
+
+        if is_maximizer:
+            best = -1000
+
+            for possible_field in possible_fields:
+                temp_grid[possible_field[0]][possible_field[1]] = "X"
+                possible_best = self.minimax(temp_grid, not is_maximizer)
+                best = max(best, possible_best)
+                temp_grid[possible_field[0]][possible_field[1]] = " "
+
+            return best
+
+        else:
+            best = 1000
+
+            for possible_field in possible_fields:
+                temp_grid[possible_field[0]][possible_field[1]] = "O"
+                possible_best = self.minimax(temp_grid, not is_maximizer)
+                best = min(best, possible_best)
+                temp_grid[possible_field[0]][possible_field[1]] = " "
+
+            return best
+
+    def get_best_field(self):
+        possible_fields = self.get_possible_fields(self.grid)
+        temp_grid = deepcopy(self.grid)
+
+        best_state = -1000
+        best_field = None
+        for possible_field in possible_fields:
+            temp_grid[possible_field[0]][possible_field[1]] = "X"
+            state = self.minimax(temp_grid, False)
+            temp_grid[possible_field[0]][possible_field[1]] = " "
+
+
+            if state > best_state:
+                best_state = state
+                best_field = possible_field
+
+        return best_field
 
     def set_player_move(self, coordinates):
         self.grid[coordinates[0]][coordinates[1]] = "O"
@@ -177,30 +236,30 @@ class TicTacToe:
 
             self.set_player_move(coordinates)
 
-            is_player_win = self.check_winner("O")
+            is_player_win = self.check_winner("O", self.grid)
             if is_player_win:
                 self.generate_grid()
                 print(f"You win! :D")
                 game_finished = True
                 continue
 
-            possible_fields = self.get_possible_fields()
+            possible_fields = self.get_possible_fields(self.grid)
             if not possible_fields:
                 self.generate_grid()
                 print(f"It's a tie!")
                 game_finished = True
                 continue
 
-            rand_coordinates = self.get_random_coordinates(possible_fields)
-            self.set_bot_move(rand_coordinates)
 
-            is_bot_win = self.check_winner("X")
+            best_field = self.get_best_field()
+            self.set_bot_move((best_field[0], best_field[1]))
+
+            is_bot_win = self.check_winner("X", self.grid)
             if is_bot_win:
                 self.generate_grid()
                 print(f"You lose! :(")
                 game_finished = True
                 continue
-
 
 
 tic_tac_toe = TicTacToe()
