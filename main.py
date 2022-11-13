@@ -15,6 +15,14 @@ class TicTacToe:
         self.invalid_input = False
         self.field_already_used = False
 
+    def get_possible_fields(self, grid):
+        possible_fields = []
+        for i, row in enumerate(grid):
+            for j, field in enumerate(row):
+                if field == " ":
+                    possible_fields.append((i, j))
+        return possible_fields
+
     def get_coordinates(self, field):
         letter = field[0]
         num = field[1]
@@ -28,17 +36,19 @@ class TicTacToe:
 
         return coordinates
 
-    def get_possible_fields(self, grid):
-        possible_fields = []
-        for i, row in enumerate(grid):
-            for j, field in enumerate(row):
-                if field == " ":
-                    possible_fields.append((i, j))
-        return possible_fields
-
     def get_random_coordinates(self, possible_fields):
         rand_field = random.choice(possible_fields)
         return rand_field[0], rand_field[1]
+
+    def get_termination_state(self, grid):
+        if self.check_winner("X", grid):
+            return 10
+        elif self.check_winner("O", grid):
+            return -10
+
+    def check_field(self, field):
+        if field != " ":
+            self.field_already_used = True
 
     def check_input(self, input_str):
         if not len(input_str) == 2:
@@ -51,12 +61,7 @@ class TicTacToe:
         if letter not in ["A", "B", "C"] or num not in ["1", "2", "3"]:
             self.invalid_input = True
 
-    def check_field(self, field):
-        if field != " ":
-            self.field_already_used = True
-
     def check_winner(self, player, grid):
-
         # horizontal check
         for i in range(3):
             count_h = 0
@@ -102,12 +107,6 @@ class TicTacToe:
             return True
 
         return False
-
-    def get_termination_state(self, grid):
-        if self.check_winner("X", grid):
-            return 10
-        elif self.check_winner("O", grid):
-            return -10
 
     def minimax(self, temp_grid, is_maximizer):
         possible_fields = self.get_possible_fields(temp_grid)
