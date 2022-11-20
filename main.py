@@ -160,6 +160,94 @@ class TicTacToe:
 
         return best_field
 
+    def get_next_win_move(self, player, grid):
+        possible_fields = self.get_possible_fields(self.grid)
+
+        # horizontal check
+        for i in range(3):
+            fields_used_h = []
+            count_h = 0
+            for j in range(3):
+                field = grid[i][j]
+                if field == player:
+                    fields_used_h.append((i, j))
+                    count_h += 1
+
+            if count_h == 2:
+                if not (i, 0) in fields_used_h:
+                    next_field = i, 0
+                elif not (i, 1) in fields_used_h:
+                    next_field = i, 1
+                else:
+                    next_field = i, 2
+
+                if next_field in possible_fields:
+                    return next_field
+
+        # vertical check
+        for i in range(3):
+            fields_used_v = []
+            count_v = 0
+            for j in range(3):
+                field = grid[j][i]
+                if field == player:
+                    fields_used_v.append((j, i))
+                    count_v += 1
+
+            if count_v == 2:
+                if not (0, i) in fields_used_v:
+                    next_field = 0, i
+                elif not (1, i) in fields_used_v:
+                    next_field = 1, i
+                else:
+                    next_field = 2, i
+
+                if next_field in possible_fields:
+                    return next_field
+
+        # diagonal check
+        fields_used_d = []
+        count_d = 0
+        for i in range(3):
+            field = grid[i][i]
+            if field == player:
+                fields_used_d.append((i, i))
+                count_d += 1
+
+        if count_d == 2:
+            if not (0, 0) in fields_used_d:
+                next_field = 0, 0
+            elif not (1, 1) in fields_used_d:
+                next_field = 1, 1
+            else:
+                next_field = 2, 2
+
+            if next_field in possible_fields:
+                return next_field
+
+        fields_used_d = []
+        d = 2
+        count_d = 0
+        for i in range(3):
+            field = grid[d][i]
+            if field == player:
+                fields_used_d.append((d, i))
+                count_d += 1
+
+            d -= 1
+
+        if count_d == 2:
+            if not (2, 0) in fields_used_d:
+                next_field = 2, 0
+            elif not (1, 1) in fields_used_d:
+                next_field = 1, 1
+            else:
+                next_field = 0, 2
+
+            return next_field
+
+        return None
+
     def set_player_move(self, coordinates):
         self.grid[coordinates[0]][coordinates[1]] = "O"
 
@@ -273,10 +361,10 @@ class TicTacToe:
                 bot_field = random.choice(possible_fields)
 
             elif difficulty == 1:
-                choose_field_method = random.randint(0, 1)
+                next_move_win = self.get_next_win_move("O", self.grid)
 
-                if choose_field_method:
-                    bot_field = self.get_best_field()
+                if next_move_win:
+                    bot_field = next_move_win
                 else:
                     bot_field = random.choice(possible_fields)
 
