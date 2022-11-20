@@ -246,7 +246,8 @@ class TicTacToe:
             else:
                 next_field = 0, 2
 
-            return next_field
+            if next_field in possible_fields:
+                return next_field
 
         return None
 
@@ -363,12 +364,15 @@ class TicTacToe:
                 bot_field = random.choice(possible_fields)
 
             elif difficulty == 1:
-                next_move_win = self.get_next_win_move("O", self.grid)
-
-                if next_move_win:
-                    bot_field = next_move_win
+                next_bot_move_win = self.get_next_win_move("X", self.grid)
+                if next_bot_move_win:
+                    bot_field = next_bot_move_win
                 else:
-                    bot_field = random.choice(possible_fields)
+                    next_player_move_win = self.get_next_win_move("O", self.grid)
+                    if next_player_move_win:
+                        bot_field = next_player_move_win
+                    else:
+                        bot_field = random.choice(possible_fields)
 
             elif difficulty == 2:
                 bot_field = self.get_best_field()
