@@ -84,7 +84,7 @@ class TicTacToe:
             if count_v == 3:
                 return True
 
-        # diagonal check
+        # diagonal check 1
         count_d = 0
         for i in range(3):
             field = grid[i][i]
@@ -94,6 +94,7 @@ class TicTacToe:
         if count_d == 3:
             return True
 
+        # diagonal check 2
         d = 2
         count_d = 0
         for i in range(3):
@@ -205,7 +206,7 @@ class TicTacToe:
                 if next_field in possible_fields:
                     return next_field
 
-        # diagonal check
+        # diagonal check 1
         fields_used_d = []
         count_d = 0
         for i in range(3):
@@ -225,6 +226,7 @@ class TicTacToe:
             if next_field in possible_fields:
                 return next_field
 
+        # diagonal check 2
         fields_used_d = []
         d = 2
         count_d = 0
