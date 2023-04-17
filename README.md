@@ -1,5 +1,6 @@
 # Tic-Tac-Toe console game
-The simple game Tic-Tac-Toe made for console that you can play against an AI based on the minimax algorithm.
+
+**This is the equivalent of my [Tic-Tac-Toe website](https://github.com/puncher1/tictactoe-website) made for the console, which comes with an AI based on the minimax algorithm.**
 
 ![image](https://user-images.githubusercontent.com/65789180/201497914-49aa4198-304e-4deb-930a-0c2469f7eead.png)
 
